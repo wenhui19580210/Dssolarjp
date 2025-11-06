@@ -3,7 +3,14 @@ import { ChevronDown, ChevronUp } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useFAQs } from '../hooks/useFAQs';
 
-export const FAQ: React.FC = () => {
+interface FAQProps {
+  config?: {
+    background_color?: string;
+    text_color?: string;
+  };
+}
+
+export const FAQ: React.FC<FAQProps> = ({ config }) => {
   const { language, t } = useLanguage();
   const { data: faqs, loading } = useFAQs();
   const [openIndex, setOpenIndex] = useState<number | null>(0);
@@ -14,23 +21,28 @@ export const FAQ: React.FC = () => {
 
   if (loading) {
     return (
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <section className="py-20" style={config?.background_color ? { backgroundColor: config.background_color } : {}}>
+        <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
           <div className="text-center">
-            <p className="text-gray-500">{t('読み込み中...', '加载中...')}</p>
+            <p className={!config?.text_color ? 'text-gray-500' : ''}>{t('読み込み中...', '加载中...')}</p>
           </div>
         </div>
       </section>
     );
   }
 
+  const sectionStyle: React.CSSProperties = {};
+  if (config?.background_color) {
+    sectionStyle.backgroundColor = config.background_color;
+  }
+
   return (
-    <section className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section className={`py-20 ${!config?.background_color ? 'bg-gray-50' : ''}`} style={sectionStyle}>
+      <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
         <div className="max-w-3xl mx-auto">
           {/* セクションタイトル */}
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+            <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${!config?.text_color ? 'text-gray-900' : ''}`}>
               {t('❓ よくある質問', '❓ 常见问题')}
             </h2>
             <p className="text-gray-600">

@@ -3,28 +3,40 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useServices } from '../hooks/useServices';
 import * as Icons from 'lucide-react';
 
-export const Services: React.FC = () => {
+interface ServicesProps {
+  config?: {
+    background_color?: string;
+    text_color?: string;
+  };
+}
+
+export const Services: React.FC<ServicesProps> = ({ config }) => {
   const { language, t } = useLanguage();
   const { data: services, loading } = useServices();
 
   if (loading) {
     return (
-      <section id="service" className="py-20 bg-gray-50">
-        <div className="container mx-auto px-4">
+      <section id="service" className="py-20" style={config?.background_color ? { backgroundColor: config.background_color } : {}}>
+        <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
           <div className="text-center">
-            <p className="text-gray-500">{t('読み込み中...', '加载中...')}</p>
+            <p className={!config?.text_color ? 'text-gray-500' : ''}>{t('読み込み中...', '加载中...')}</p>
           </div>
         </div>
       </section>
     );
   }
 
+  const sectionStyle: React.CSSProperties = {};
+  if (config?.background_color) {
+    sectionStyle.backgroundColor = config.background_color;
+  }
+
   return (
-    <section id="service" className="py-20 bg-gray-50">
-      <div className="container mx-auto px-4">
+    <section id="service" className={`py-20 ${!config?.background_color ? 'bg-gray-50' : ''}`} style={sectionStyle}>
+      <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
         {/* セクションタイトル */}
         <div className="text-center mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2 sm:gap-3">
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-2 sm:gap-3 ${!config?.text_color ? 'text-gray-900' : ''}`}>
             <span className="text-2xl sm:text-3xl md:text-4xl">🔧</span>
             <span>{t('サービス内容', '服务内容')}</span>
           </h2>

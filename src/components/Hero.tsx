@@ -3,7 +3,14 @@ import { Sun, ArrowRight } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCompanyInfo } from '../hooks/useCompanyInfo';
 
-export const Hero: React.FC = () => {
+interface HeroProps {
+  config?: {
+    background_color?: string;
+    text_color?: string;
+  };
+}
+
+export const Hero: React.FC<HeroProps> = ({ config }) => {
   const { language, t } = useLanguage();
   const { data: company } = useCompanyInfo();
 
@@ -20,8 +27,19 @@ export const Hero: React.FC = () => {
   // hero_icon_urlがなければbrowser_favicon_urlを使用、それもなければデフォルトの/sun-icon.svgを使用
   const iconUrl = company?.hero_icon_url || company?.browser_favicon_url || '/sun-icon.svg';
 
+  // 背景スタイルを動的に設定
+  const sectionStyle: React.CSSProperties = {};
+  const useCustomBackground = config?.background_color;
+  
+  if (useCustomBackground) {
+    sectionStyle.backgroundColor = config.background_color;
+  }
+
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50 pt-16">
+    <section 
+      className={`relative min-h-screen flex items-center justify-center pt-16 ${!useCustomBackground ? 'bg-gradient-to-br from-indigo-50 via-purple-50 to-blue-50' : ''}`}
+      style={sectionStyle}
+    >
       {/* 背景装飾 */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 right-10 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-30 animate-blob"></div>
@@ -30,7 +48,7 @@ export const Hero: React.FC = () => {
       </div>
 
       <div className="container mx-auto px-4 relative z-10">
-        <div className="max-w-4xl mx-auto text-center">
+        <div className="max-w-4xl mx-auto text-center" style={config?.text_color ? { color: config.text_color } : {}}>
           {/* アイコン - 管理画面から制御可能 */}
           {shouldShowIcon && (
             <div className="inline-flex items-center justify-center mb-6">
@@ -60,15 +78,15 @@ export const Hero: React.FC = () => {
           )}
 
           {/* メインキャッチコピー */}
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+          <h1 className={`text-4xl md:text-6xl font-bold mb-6 ${!config?.text_color ? 'text-gray-900' : ''}`}>
             {language === 'zh' ? company?.company_name_zh : company?.company_name}
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-700 mb-4 font-medium">
+          <p className={`text-xl md:text-2xl mb-4 font-medium ${!config?.text_color ? 'text-gray-700' : ''}`}>
             {language === 'zh' ? company?.business_content_zh : company?.business_content_ja}
           </p>
 
-          <p className="text-lg text-gray-600 mb-12 max-w-2xl mx-auto">
+          <p className={`text-lg mb-12 max-w-2xl mx-auto ${!config?.text_color ? 'text-gray-600' : ''}`}>
             {t(
               '「設置して終わり」ではなく、「発電を続ける力」を守ることが使命です。',
               '我们的使命不是"安装完就结束"，而是守护"持续发电的力量"。'
