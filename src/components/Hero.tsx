@@ -6,6 +6,7 @@ import { useCompanyInfo } from '../hooks/useCompanyInfo';
 interface HeroProps {
   config?: {
     background_color?: string;
+    background_gradient?: string;
     text_color?: string;
   };
 }
@@ -27,13 +28,20 @@ export const Hero: React.FC<HeroProps> = ({ config }) => {
   // hero_icon_urlがなければbrowser_favicon_urlを使用、それもなければデフォルトの/sun-icon.svgを使用
   const iconUrl = company?.hero_icon_url || company?.browser_favicon_url || '/sun-icon.svg';
 
-  // 背景スタイルを動的に設定
+  // 背景スタイルを動的に設定（優先順位: gradient > color > default）
   const sectionStyle: React.CSSProperties = {};
-  const useCustomBackground = config?.background_color;
+  let useCustomBackground = false;
   
-  if (useCustomBackground) {
+  if (config?.background_gradient) {
+    // 1. background_gradient が最優先
+    sectionStyle.background = config.background_gradient;
+    useCustomBackground = true;
+  } else if (config?.background_color) {
+    // 2. background_color が次点
     sectionStyle.backgroundColor = config.background_color;
+    useCustomBackground = true;
   }
+  // 3. どちらもなければデフォルトグラデーション（className で設定）
 
   return (
     <section 

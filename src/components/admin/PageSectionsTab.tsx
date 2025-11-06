@@ -11,6 +11,7 @@ interface PageSection {
   order_index: number;
   is_visible: boolean;
   background_color: string | null;
+  background_gradient: string | null;
   text_color: string | null;
   title_ja: string | null;
   title_zh: string | null;
@@ -57,6 +58,7 @@ export const PageSectionsTab: React.FC = () => {
         order_index: section.order_index,
         is_visible: section.is_visible,
         background_color: section.background_color,
+        background_gradient: section.background_gradient,
         text_color: section.text_color,
         title_ja: section.title_ja,
         title_zh: section.title_zh,
@@ -232,63 +234,100 @@ export const PageSectionsTab: React.FC = () => {
                   </div>
 
                   {/* カラー設定 */}
-                  <div className="grid md:grid-cols-2 gap-6">
+                  <div className="space-y-4">
+                    {/* 背景グラデーション設定 */}
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t('背景色', '背景色')}
+                        {t('背景グラデーション（最優先）', '背景渐变（最优先）')}
                       </label>
                       <div className="flex items-center space-x-3">
                         <input
-                          type="color"
-                          value={section.background_color || '#ffffff'}
-                          onChange={(e) => updateSection(section.id, 'background_color', e.target.value)}
-                          className="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
-                        />
-                        <input
                           type="text"
-                          value={section.background_color || ''}
-                          onChange={(e) => updateSection(section.id, 'background_color', e.target.value)}
-                          placeholder="#ffffff"
+                          value={section.background_gradient || ''}
+                          onChange={(e) => updateSection(section.id, 'background_gradient', e.target.value)}
+                          placeholder="linear-gradient(to right, #667eea 0%, #764ba2 100%)"
                           className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary font-mono text-sm"
                         />
-                        {section.background_color && (
+                        {section.background_gradient && (
                           <button
-                            onClick={() => updateSection(section.id, 'background_color', null)}
+                            onClick={() => updateSection(section.id, 'background_gradient', null)}
                             className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800"
                           >
                             {t('クリア', '清除')}
                           </button>
                         )}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {t('例: linear-gradient(135deg, #667eea 0%, #764ba2 100%)', '例: linear-gradient(135deg, #667eea 0%, #764ba2 100%)')}
+                      </p>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-6">
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          {t('背景色（単色）', '背景色（单色）')}
+                        </label>
+                        <div className="flex items-center space-x-3">
+                          <input
+                            type="color"
+                            value={section.background_color || '#ffffff'}
+                            onChange={(e) => updateSection(section.id, 'background_color', e.target.value)}
+                            className="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={section.background_color || ''}
+                            onChange={(e) => updateSection(section.id, 'background_color', e.target.value)}
+                            placeholder="#ffffff"
+                            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary font-mono text-sm"
+                          />
+                          {section.background_color && (
+                            <button
+                              onClick={() => updateSection(section.id, 'background_color', null)}
+                              className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800"
+                            >
+                              {t('クリア', '清除')}
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                          {t('テキスト色', '文字颜色')}
+                        </label>
+                        <div className="flex items-center space-x-3">
+                          <input
+                            type="color"
+                            value={section.text_color || '#000000'}
+                            onChange={(e) => updateSection(section.id, 'text_color', e.target.value)}
+                            className="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
+                          />
+                          <input
+                            type="text"
+                            value={section.text_color || ''}
+                            onChange={(e) => updateSection(section.id, 'text_color', e.target.value)}
+                            placeholder="#000000"
+                            className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary font-mono text-sm"
+                          />
+                          {section.text_color && (
+                            <button
+                              onClick={() => updateSection(section.id, 'text_color', null)}
+                              className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800"
+                            >
+                              {t('クリア', '清除')}
+                            </button>
+                          )}
+                        </div>
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
-                        {t('テキスト色', '文字颜色')}
-                      </label>
-                      <div className="flex items-center space-x-3">
-                        <input
-                          type="color"
-                          value={section.text_color || '#000000'}
-                          onChange={(e) => updateSection(section.id, 'text_color', e.target.value)}
-                          className="w-16 h-16 border-2 border-gray-300 rounded-lg cursor-pointer"
-                        />
-                        <input
-                          type="text"
-                          value={section.text_color || ''}
-                          onChange={(e) => updateSection(section.id, 'text_color', e.target.value)}
-                          placeholder="#000000"
-                          className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary font-mono text-sm"
-                        />
-                        {section.text_color && (
-                          <button
-                            onClick={() => updateSection(section.id, 'text_color', null)}
-                            className="px-3 py-2 text-sm text-gray-600 hover:text-gray-800"
-                          >
-                            {t('クリア', '清除')}
-                          </button>
-                        )}
-                      </div>
+                    {/* 優先順位の説明 */}
+                    <div className="bg-blue-50 border-l-4 border-blue-400 p-3 rounded">
+                      <p className="text-xs text-blue-700">
+                        <strong>{t('表示の優先順位:', '显示优先级:')}</strong><br />
+                        {t('1. 背景グラデーション（最優先） → 2. 背景色（単色） → 3. デフォルトグラデーション', '1. 背景渐变（最优先） → 2. 背景色（单色） → 3. 默认渐变')}
+                      </p>
                     </div>
                   </div>
 
@@ -354,7 +393,7 @@ export const PageSectionsTab: React.FC = () => {
                   </div>
 
                   {/* プレビュー */}
-                  {(section.background_color || section.text_color) && (
+                  {(section.background_gradient || section.background_color || section.text_color) && (
                     <div className="border-t pt-6">
                       <h4 className="text-sm font-bold text-gray-900 mb-3">
                         {t('プレビュー', '预览')}
@@ -362,7 +401,7 @@ export const PageSectionsTab: React.FC = () => {
                       <div
                         className="p-8 rounded-lg border border-gray-300"
                         style={{
-                          backgroundColor: section.background_color || undefined,
+                          background: section.background_gradient || section.background_color || undefined,
                           color: section.text_color || undefined,
                         }}
                       >
