@@ -4,28 +4,40 @@ import { Link } from 'react-router-dom';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useBlogPosts } from '../hooks/useBlogPosts';
 
-export const Results: React.FC = () => {
+interface ResultsProps {
+  config?: {
+    background_color?: string;
+    text_color?: string;
+  };
+}
+
+export const Results: React.FC<ResultsProps> = ({ config }) => {
   const { language, t } = useLanguage();
   const { data: posts, loading } = useBlogPosts(); // 制限なしで全て取得
 
   if (loading) {
     return (
-      <section id="result" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section id="result" className="py-20" style={config?.background_color ? { backgroundColor: config.background_color } : {}}>
+        <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
           <div className="text-center">
-            <p className="text-gray-500">{t('読み込み中...', '加载中...')}</p>
+            <p className={!config?.text_color ? 'text-gray-500' : ''}>{t('読み込み中...', '加载中...')}</p>
           </div>
         </div>
       </section>
     );
   }
 
+  const sectionStyle: React.CSSProperties = {};
+  if (config?.background_color) {
+    sectionStyle.backgroundColor = config.background_color;
+  }
+
   return (
-    <section id="result" className="py-20 bg-white">
-      <div className="container mx-auto px-4">
+    <section id="result" className={`py-20 ${!config?.background_color ? 'bg-white' : ''}`} style={sectionStyle}>
+      <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
         {/* セクションタイトル */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${!config?.text_color ? 'text-gray-900' : ''}`}>
             {t('📊 導入効果・事例', '📊 导入效果・案例')}
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">

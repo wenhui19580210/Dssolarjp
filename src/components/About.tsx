@@ -3,28 +3,40 @@ import { Building2, User, Calendar, DollarSign } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useCompanyInfo } from '../hooks/useCompanyInfo';
 
-export const About: React.FC = () => {
+interface AboutProps {
+  config?: {
+    background_color?: string;
+    text_color?: string;
+  };
+}
+
+export const About: React.FC<AboutProps> = ({ config }) => {
   const { language, t } = useLanguage();
   const { data: company, loading } = useCompanyInfo();
 
   if (loading) {
     return (
-      <section id="about" className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section id="about" className="py-20" style={config?.background_color ? { backgroundColor: config.background_color } : {}}>
+        <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
           <div className="text-center">
-            <p className="text-gray-500">{t('読み込み中...', '加载中...')}</p>
+            <p className={!config?.text_color ? 'text-gray-500' : ''}>{t('読み込み中...', '加载中...')}</p>
           </div>
         </div>
       </section>
     );
   }
 
+  const sectionStyle: React.CSSProperties = {};
+  if (config?.background_color) {
+    sectionStyle.backgroundColor = config.background_color;
+  }
+
   return (
-    <section id="about" className="py-20 bg-white">
-      <div className="container mx-auto px-4">
+    <section id="about" className={`py-20 ${!config?.background_color ? 'bg-white' : ''}`} style={sectionStyle}>
+      <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
         {/* セクションタイトル */}
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
+          <h2 className={`text-3xl md:text-4xl font-bold mb-4 ${!config?.text_color ? 'text-gray-900' : ''}`}>
             {t('🌞 私たちについて', '🌞 关于我们')}
           </h2>
           <p className="text-gray-600 max-w-2xl mx-auto">

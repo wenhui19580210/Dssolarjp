@@ -2,7 +2,14 @@ import React from 'react';
 import { Mail, MapPin, Calendar, Wrench, FileText } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
-export const Flow: React.FC = () => {
+interface FlowProps {
+  config?: {
+    background_color?: string;
+    text_color?: string;
+  };
+}
+
+export const Flow: React.FC<FlowProps> = ({ config }) => {
   const { t } = useLanguage();
 
   const steps = [
@@ -43,12 +50,17 @@ export const Flow: React.FC = () => {
     },
   ];
 
+  const sectionStyle: React.CSSProperties = {};
+  if (config?.background_color) {
+    sectionStyle.backgroundColor = config.background_color;
+  }
+
   return (
-    <section id="flow" className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
-      <div className="container mx-auto px-4">
+    <section id="flow" className={`py-20 ${!config?.background_color ? 'bg-gradient-to-br from-gray-50 to-blue-50' : ''}`} style={sectionStyle}>
+      <div className="container mx-auto px-4" style={config?.text_color ? { color: config.text_color } : {}}>
         {/* セクションタイトル */}
         <div className="text-center mb-16">
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-4 flex items-center justify-center gap-2 sm:gap-3">
+          <h2 className={`text-2xl sm:text-3xl md:text-4xl font-bold mb-4 flex items-center justify-center gap-2 sm:gap-3 ${!config?.text_color ? 'text-gray-900' : ''}`}>
             <span className="text-2xl sm:text-3xl md:text-4xl">🗓️</span>
             <span>{t('ご依頼の流れ', '委托流程')}</span>
           </h2>
